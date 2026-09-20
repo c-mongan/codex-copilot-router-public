@@ -9,7 +9,7 @@
 <p align="center">
   <a href="docs/SETUP.md#build-and-prepare-a-fresh-installation"><strong>Get started →</strong></a>
   &nbsp;·&nbsp;
-  <a href="docs/SETUP.md#context-defaults-and-optional-long-context">Context settings</a>
+  <a href="docs/SETUP.md#context-defaults-and-optional-long-context">Context</a>
   &nbsp;·&nbsp;
   <a href="LICENSE">MIT licence</a>
 </p>
