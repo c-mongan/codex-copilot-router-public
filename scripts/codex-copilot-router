@@ -1,0 +1,39 @@
+#!/bin/sh
+set -eu
+umask 077
+
+root="$HOME/.local/share/codex-code-router"
+action="${1:-serve}"
+if [ "$#" -gt 1 ]; then
+    printf '%s\n' 'Usage: codex-copilot-router [serve|login]' >&2
+    exit 2
+fi
+case "$action" in
+    login|serve) ;;
+    *)
+        printf '%s\n' 'Usage: codex-copilot-router [serve|login]' >&2
+        exit 2
+        ;;
+esac
+
+exec /usr/bin/env -i \
+    HOME="$HOME" \
+    PATH=/usr/bin:/bin \
+    HOST=127.0.0.1 \
+    PORT=60001 \
+    CODEX_CODE_ROUTER_CLIENT_TOKEN_FILE="$root/client-token" \
+    CODEX_CODE_ROUTER_MODEL_CATALOG="$root/desktop-models.json" \
+    COPILOT_TOKEN_FILE="$root/copilot-tokens.json" \
+    COPILOT_TOKEN_REFRESH=true \
+    COPILOT_TOKEN_EXPIRY_BUFFER_SECONDS=300 \
+    NATIVE_OPENAI_BASE_URL=https://chatgpt.com/backend-api/codex \
+    COPILOT_TOKEN_URL=https://api.github.com/copilot_internal/v2/token \
+    GITHUB_DEVICE_CODE_URL=https://github.com/login/device/code \
+    GITHUB_ACCESS_TOKEN_URL=https://github.com/login/oauth/access_token \
+    GITHUB_OAUTH_CLIENT_ID=01ab8ac9400c4e429b23 \
+    GITHUB_OAUTH_SCOPE=read:user \
+    REQUEST_TIMEOUT_MS=300000 \
+    REQUEST_BODY_LIMIT_BYTES=16777216 \
+    RATE_LIMIT_MAX_TOTAL_WAIT_MS=30000 \
+    CODEX_CODE_ROUTER_RAW_LOG_LEVEL=off \
+    "$root/bin/codex-code-router" "$action"
