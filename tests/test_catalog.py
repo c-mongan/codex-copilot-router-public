@@ -154,6 +154,18 @@ class CatalogMetadataTests(unittest.TestCase):
         self.assertNotIn("web_search_tool_type", row)
         self.assertEqual(report["descriptors"]["future-model"], {"source": "fallback", "template": "gpt-5.4"})
 
+    def test_copilot_agent_protocol_does_not_inherit_native_v2(self):
+        native_row = descriptor("same-model")
+        native_row["multi_agent_version"] = "v2"
+        original = copy.deepcopy(native_row)
+        combined, raw, _ = self.build(
+            [live_model("same-model")], native={"models": [native_row]}
+        )
+        self.assertEqual(combined["models"][0], original)
+        self.assertEqual(native_row, original)
+        self.assertEqual(raw["models"][0]["multi_agent_version"], "v1")
+        self.assertEqual(combined["models"][1]["multi_agent_version"], "v1")
+
     def test_tool_discovery_capability_is_not_disabled_as_web_search(self):
         for source in ("native", "bundled", "existing", "fallback"):
             native = {"models": [descriptor("native")]}

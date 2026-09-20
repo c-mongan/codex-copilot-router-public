@@ -211,6 +211,40 @@ storage, stream-ID repair or image rewriting. An upstream protocol quirk may sti
 reach the client unchanged. This integration does not claim every provider-specific
 feature is interchangeable.
 
+### Subagents
+
+Copilot descriptors use Codex's client-managed `v1` subagent protocol, with
+plain-text task handoffs. Native descriptors retain their own version. This
+avoids inheriting native encrypted v2 handoffs from the template; do not remove
+encrypted task content to make a failed request pass.
+
+An existing global `features.multi_agent_v2.enabled = true` overrides every
+model's descriptor. For model-selected protocols, change only that setting to
+`false` while keeping `features.multi_agent = true`:
+
+```toml
+[features.multi_agent_v2]
+enabled = false
+```
+
+Edit an existing table rather than adding a duplicate, and preserve its other
+settings. Regenerate/review the Copilot catalogues, reload Codex when idle, and
+start a **fresh Copilot conversation**. Codex fixes the protocol for a conversation
+tree and passes it to children; changing a child's model alone cannot change it.
+Keep native-v2 and Copilot-v1 agent trees separate rather than mixing providers
+within a v2 tree. Existing conversations and history are not rewritten.
+
+To roll back an existing forced-v2 setup, restore its previous
+`features.multi_agent_v2.enabled = true` value, reload Codex when idle, and
+start a fresh conversation. Existing conversation trees retain the protocol
+selected when they were created.
+
+Verification used the installed app-server with synthetic parent/child flows,
+plus one bounded live Sol worker request whose successful response was replayed
+through Codex's child-to-parent return path. This is not a guarantee for every
+model, tool registry, or future client version. Tool discovery, code mode,
+approvals and sandbox settings remain available and unchanged.
+
 ### Context defaults and optional long context
 
 As verified on 2026-09-20, native Codex App/CLI and this installation's combined
