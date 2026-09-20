@@ -268,6 +268,9 @@ def copilot_descriptor(live, template, *, fallback):
     row["additional_speed_tiers"] = []
     row["service_tiers"] = []
     row["use_responses_lite"] = False
+    # Native v2 metadata selects encrypted agent-message handoffs. Use the
+    # client-managed plaintext protocol for Copilot; native rows stay untouched.
+    row["multi_agent_version"] = "v1"
     # This is client-executed MCP/tool discovery, not hosted web search.
     # Preserve the descriptor's capability so large registries remain deferred.
     if row.get("supports_search_tool") is True:

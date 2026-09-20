@@ -56,6 +56,7 @@ The helper prepares private files. **It does not log in, start services or overw
 **Experimental and unofficial.** Tested with Codex `0.154.0-alpha.6.2` on macOS—not guaranteed across every client, model or update. Copilot quotas and policies still apply.
 
 - Codex-managed compaction completed in offline replay; provider-native Copilot compact/lite endpoints are not implemented.
+- Copilot subagents use plain-text handoffs. Existing forced-v2 setups need the [subagent configuration](docs/SETUP.md#subagents).
 - Keep it on a trusted machine. Tokens are private files, not Keychain entries; these controls do not protect against same-user malware.
 - Never share tokens, generated config fragments or raw conversation logs.
 
